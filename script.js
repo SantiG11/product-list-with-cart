@@ -13,7 +13,78 @@ const carbonNeutral = document.querySelector('.carbon-neutral-container');
 
 let itemsAmount = 0;
 let orderTotalRes = 0;
-const productMap = new Map(); // To keep track of products in the cart
+
+
+class ProductObj {
+    constructor(name, id, description, price) {
+        this.name = name;
+        this.id = id;
+        this.description = description;
+        this.price = price;
+        this.quantity = 0;
+    }
+
+addQuantity() {
+    this.quantity++;
+    console.log(this.quantity);
+}
+
+subQuantity() {
+    this.quantity--;
+    console.log(this.quantity);
+}
+
+}
+
+const productObjets = [];
+
+products.forEach(product => {
+    // Use a unique identifier for each product;
+    
+    const productNameEl = product.querySelector('.product-name');
+    const productName = productNameEl.textContent;
+    const productId = productName;
+    const productDescription = product.querySelector('.product-description').textContent;
+    const productPrice = product.querySelector('.product-price').textContent;
+    const priceNumber = parseFloat(productPrice.replace('$', '').trim());
+    const addBtn = product.querySelector('.add-btn');
+
+    const productObj = new ProductObj (
+            productName, productId, productDescription, priceNumber
+    );
+
+   
+
+    productObjets.push(productObj);
+
+    addBtn.addEventListener('click', (e) => {
+        if (itemsAmount === 0) {
+            hideOrShowEl(orderTotalCont);
+            hideOrShowEl(cartImg);
+            hideOrShowEl(cartPlaceHolder);
+            hideOrShowEl(carbonNeutral);
+            hideOrShowEl(confirmBtn);
+        }
+        itemsAmount++;
+
+
+        displayAmount();
+        // addProduct( productId, productDescription, productPrice, priceNumber);
+        activateBtn(product, productId, priceNumber, addBtn);
+
+
+
+    });
+});
+
+const productToFind = 'Waffle';
+
+productObjets.find(product => product.name === productToFind).addQuantity();
+productObjets.find(product => product.name === productToFind).addQuantity();
+productObjets.find(product => product.name === productToFind).addQuantity();
+productObjets.find(product => product.name === productToFind).subQuantity();
+
+console.log(productObjets.find(product => product.name === productToFind));
 
 const hideOrShowEl = (element) => {
     if (element.classList.contains('hidden')) {
@@ -130,7 +201,7 @@ const updateProductEl = (productId, priceNumber, quant) => {
     }
 
 
-    productMap.set(productId, { element, amount: newAmount });
+    
 }
 
 
@@ -147,38 +218,7 @@ const addProduct = (product, quantity, productId, productDescription, productPri
 
 window.onload = displayAmount;
 
-products.forEach(product => {
-    // Use a unique identifier for each product;
-    let quantity = 1;
-    const productNameEl = product.querySelector('.product-name');
-    const productName = productNameEl.textContent;
-    const productId = productName;
-    const productDescription = product.querySelector('.product-description').textContent;
-    const productPrice = product.querySelector('.product-price').textContent;
-    const priceNumber = parseFloat(productPrice.replace('$', '').trim());
-    const addBtn = product.querySelector('.add-btn');
 
-
-
-    addBtn.addEventListener('click', (e) => {
-        if (itemsAmount === 0) {
-            hideOrShowEl(orderTotalCont);
-            hideOrShowEl(cartImg);
-            hideOrShowEl(cartPlaceHolder);
-            hideOrShowEl(carbonNeutral);
-            hideOrShowEl(confirmBtn);
-        }
-        itemsAmount++;
-
-
-        displayAmount();
-        addProduct(product, quantity, productId, productDescription, productPrice, priceNumber);
-        activateBtn(quantity, product, productId, priceNumber, addBtn);
-
-
-
-    });
-});
 
 
 const activateBtn = (quantity, product, productId, priceNumber, el) => {
