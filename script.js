@@ -15,22 +15,23 @@ let orderTotalRes = 0;
 
 
 class ProductObj {
-    constructor(name, id, description, price) {
+    constructor(name, id, description, price, added) {
         this.name = name;
         this.id = id;
         this.description = description;
         this.price = price;
         this.quantity = 0;
+        this.added = false;
     }
 
 addQuantity() {
     this.quantity++;
-    console.log(this.quantity);
+    
 }
 
 subQuantity() {
     this.quantity--;
-    console.log(this.quantity);
+    
 }
 
 }
@@ -54,14 +55,18 @@ const hideOrShowEl = (element) => {
 }
 
 
-const increment = (productSelected, quantityP) => {
+const increment = (productSelected, quantityP, totalItemPrice, cartItemAmount ) => {
     itemsAmount++;
     displayAmount();
     productSelected.addQuantity();
     quantityP.textContent = productSelected.quantity;
+
+    const totalPrice = productSelected.quantity * productSelected.price;
+    cartItemAmount.textContent = productSelected.quantity + 'x';
+    totalItemPrice.textContent = '$' + totalPrice.toFixed(2);
 }
 
-const decrement = (productSelected, quantityP, el, activeBtn) => {
+const decrement = (productSelected, quantityP, el, activeBtn, cartItem, totalItemPrice, cartItemAmount) => {
     itemsAmount--;
 
     if (itemsAmount === 0) {
@@ -75,14 +80,18 @@ const decrement = (productSelected, quantityP, el, activeBtn) => {
     productSelected.subQuantity();
     if(!productSelected.quantity){
         hideOrShowEl(el);
-        
-        hideOrShowEl(activeBtn);
+        cartItem.remove();
+        activeBtn.remove();
     }
 
+    const totalPrice = productSelected.quantity * productSelected.price;
     quantityP.textContent = productSelected.quantity;
+    cartItemAmount.textContent = productSelected.quantity + 'x';
+    totalItemPrice.textContent = '$' + totalPrice.toFixed(2);
+    
 }
 
-const activateBtn = (productSelected,product, el) => {
+const activateBtn = (productSelected,product, el, cartItem, totalItemPrice, cartItemAmount) => {
 
     const cartEl = document.getElementById(productSelected.id);
     
@@ -108,11 +117,14 @@ const activateBtn = (productSelected,product, el) => {
     incrementDiv.appendChild(incrementImg);
 
     decrementDiv.addEventListener('click', () => {
-        decrement(productSelected, quantityP, el, activeBtn);
+        decrement(productSelected, quantityP, el, activeBtn, cartItem, totalItemPrice, cartItemAmount);
+        
+
     })
 
     incrementDiv.addEventListener('click', () => {
-        increment(productSelected, quantityP);
+        increment(productSelected, quantityP, totalItemPrice, cartItemAmount);
+        
     })
     
 
@@ -124,7 +136,26 @@ const activateBtn = (productSelected,product, el) => {
     hideOrShowEl(el)
 }
 
-const addCartItem = (productSelected) => {
+const removeItem = (cartItem, product, productSelected, addBtn) => {
+        itemsAmount -= productSelected.quantity;
+        displayAmount();
+        if (itemsAmount === 0) {
+            hideOrShowEl(orderTotalCont);
+            hideOrShowEl(cartImg);
+            hideOrShowEl(cartPlaceHolder);
+            hideOrShowEl(carbonNeutral);
+            hideOrShowEl(confirmBtn);
+        }
+
+        const productActiveBtn = product.querySelector('.active')
+        
+        cartItem.remove();
+        productSelected.quantity = 0;
+        productActiveBtn.remove();
+        hideOrShowEl(addBtn);
+}
+
+const addCartItem = (productSelected, product, addBtn) => {
     const cartItem = document.createElement('div');
     cartItem.classList.add('cart-item');
     cartItem.id = 'cart-item-' + productSelected.id;
@@ -154,6 +185,12 @@ const addCartItem = (productSelected) => {
     totalItemPrice.textContent = `$${productSelected.price}`;
 
     cartContainer.appendChild(cartItem);
+    activateBtn(productSelected, product, addBtn, cartItem, totalItemPrice, cartItemAmount);
+
+
+    deleteBtn.addEventListener('click', () => {
+        removeItem(cartItem,product, productSelected, addBtn)
+    } )
 }
 
 
@@ -169,8 +206,8 @@ const addToCart = (productName, product, addBtn) => {
     productSelected.addQuantity();
     itemsAmount++;
     displayAmount();
-    activateBtn(productSelected, product, addBtn);
-    addCartItem(productSelected);
+    addCartItem(productSelected, product, addBtn);
+    
 }
 
 products.forEach(product => {
