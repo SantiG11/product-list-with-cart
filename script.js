@@ -7,8 +7,11 @@ const cartImg = document.querySelector('.cart-img');
 const cartPlaceHolder = document.querySelector('.cart-placeholder');
 const orderTotalCont = document.querySelector('.order-total-container');
 const orderTotal = document.getElementById('order-total');
-const confirmBtn = document.querySelector('.confirm-order-btn');
+const confirmBtn = document.querySelector('#confirm-order');
 const carbonNeutral = document.querySelector('.carbon-neutral-container');
+const startNewOrderBtn = document.getElementById('start-new-order');
+const modal = document.querySelector('.modal-backdrop');
+const confirmedModal = document.getElementById('confirmed-modal');
 
 let itemsAmount = 0;
 let orderTotalRes = 0;
@@ -42,6 +45,11 @@ const displayAmount = () => {
     totalItemsAmount.textContent = `(${itemsAmount})`;
 }
 
+const displayOrderTotal = () => {
+    orderTotal.textContent = '$' + orderTotalRes.toFixed(2);
+    console.log(orderTotalRes.toFixed(2))
+}
+
 window.onload = displayAmount;
 
 const hideOrShowEl = (element) => {
@@ -68,7 +76,7 @@ const increment = (productSelected, quantityP, totalItemPrice, cartItemAmount ) 
 
 const decrement = (productSelected, quantityP, el, activeBtn, cartItem, totalItemPrice, cartItemAmount) => {
     itemsAmount--;
-
+    
     if (itemsAmount === 0) {
         hideOrShowEl(orderTotalCont);
         hideOrShowEl(cartImg);
@@ -119,12 +127,15 @@ const activateBtn = (productSelected,product, el, cartItem, totalItemPrice, cart
     decrementDiv.addEventListener('click', () => {
         decrement(productSelected, quantityP, el, activeBtn, cartItem, totalItemPrice, cartItemAmount);
         
-
+        orderTotalRes -= parseFloat(productSelected.price);
+        displayOrderTotal();
     })
 
     incrementDiv.addEventListener('click', () => {
         increment(productSelected, quantityP, totalItemPrice, cartItemAmount);
         
+        orderTotalRes += parseFloat(productSelected.price);
+        displayOrderTotal();
     })
     
 
@@ -139,6 +150,8 @@ const activateBtn = (productSelected,product, el, cartItem, totalItemPrice, cart
 const removeItem = (cartItem, product, productSelected, addBtn) => {
         itemsAmount -= productSelected.quantity;
         displayAmount();
+        orderTotalRes -= parseFloat(productSelected.price * productSelected.quantity);
+        displayOrderTotal();
         if (itemsAmount === 0) {
             hideOrShowEl(orderTotalCont);
             hideOrShowEl(cartImg);
@@ -155,26 +168,34 @@ const removeItem = (cartItem, product, productSelected, addBtn) => {
         hideOrShowEl(addBtn);
 }
 
-const addCartItem = (productSelected, product, addBtn) => {
+const addCartItem = (productSelected, product, addBtn, thumbnail) => {
     const cartItem = document.createElement('div');
     cartItem.classList.add('cart-item');
     cartItem.id = 'cart-item-' + productSelected.id;
+    cartItem.setAttribute('name', productSelected.name);
 
+    const cartItemDetails = document.createElement('div');
     const cartItemDescription = document.createElement('h4');
     const cartItemPrice = document.createElement('p');
     const totalItemPrice = document.createElement('p');
     const cartItemAmount = document.createElement('label');
     const deleteBtn = document.createElement('img');
+    
 
     deleteBtn.src = 'assets/images/icon-remove-item.svg';
     deleteBtn.alt = 'Remove item icon';
 
-    cartItem.appendChild(cartItemDescription);
-    cartItem.appendChild(cartItemAmount);
-    cartItem.appendChild(cartItemPrice);
-    cartItem.appendChild(totalItemPrice);
-    cartItem.appendChild(deleteBtn);
 
+    cartItemDetails.appendChild(cartItemDescription);
+    cartItemDetails.appendChild(cartItemAmount);
+    cartItemDetails.appendChild(cartItemPrice);
+    cartItemDetails.appendChild(totalItemPrice);
+
+    cartItem.appendChild(thumbnail);
+    cartItem.appendChild(cartItemDetails);
+    cartItem.appendChild(deleteBtn);
+    
+    cartItemDetails.classList.add('product-details');
     cartItemAmount.classList.add('product-amount');
     totalItemPrice.classList.add('total-item-price');
     deleteBtn.classList.add('delete-btn');
@@ -189,12 +210,14 @@ const addCartItem = (productSelected, product, addBtn) => {
 
 
     deleteBtn.addEventListener('click', () => {
-        removeItem(cartItem,product, productSelected, addBtn)
+        removeItem(cartItem,product, productSelected, addBtn);
+        
+       
     } )
 }
 
 
-const addToCart = (productName, product, addBtn) => {
+const addToCart = (productName, product, addBtn, thumbnail) => {
     if (itemsAmount === 0) {
         hideOrShowEl(orderTotalCont);
         hideOrShowEl(cartImg);
@@ -206,7 +229,9 @@ const addToCart = (productName, product, addBtn) => {
     productSelected.addQuantity();
     itemsAmount++;
     displayAmount();
-    addCartItem(productSelected, product, addBtn);
+    orderTotalRes += parseFloat(productSelected.price);
+    displayOrderTotal();
+    addCartItem(productSelected, product, addBtn, thumbnail);
     
 }
 
@@ -218,6 +243,7 @@ products.forEach(product => {
     const productPrice = product.querySelector('.product-price').textContent;
     const priceNumber = parseFloat(productPrice.replace('$', '').trim()).toFixed(2);
     const addBtn = product.querySelector('.add-btn');
+    const thumbnail = product.querySelector('.thumbnail');
 
     const productObj = new ProductObj (
             productName, productName, productDescription, priceNumber
@@ -226,12 +252,53 @@ products.forEach(product => {
     productObjets.push(productObj);
 
     addBtn.addEventListener('click', () => {
-        addToCart(productName, product, addBtn);
+        addToCart(productName, product, addBtn, thumbnail);
     });
 
 });
 
 
 
+confirmBtn.addEventListener('click', () => {
+    const clonedContainer = cartContainer.cloneNode(true);
+    const clonedTotalContainer = orderTotalCont.cloneNode(true);
+    Array.from(clonedContainer.children).forEach(node => {
+        
+        const thumbnail = node.querySelector('.thumbnail');
+        const removeIcon = node.querySelector('.delete-btn');
+        const totalPriceP = node.querySelector('.total-item-price');
+        hideOrShowEl(thumbnail);
+        hideOrShowEl(removeIcon)
+    })
+    
+    
+    modal.style.display = 'block';
+    confirmedModal.insertBefore(clonedContainer, startNewOrderBtn);
+    confirmedModal.insertBefore(clonedTotalContainer, startNewOrderBtn);
+    hideOrShowEl(confirmedModal);
+    
+
+})
 
 
+startNewOrderBtn.addEventListener('click', () => {
+    let itemsAmount = 0;
+    let orderTotalRes = 0;
+    hideOrShowEl(confirmedModal);
+    modal.style.display = 'none';
+    
+    const modalCartContainer = confirmedModal.querySelector('.product-cart-container');
+    const orderTotal = confirmedModal.querySelector('.order-total-container')
+    modalCartContainer.remove();
+    orderTotal.remove();
+    const cartItems = cartContainer.childNodes;
+
+    for(let i = cartItems.length - 1; i > 0; i--){
+        let deleteButton = cartItems[i].querySelector('.delete-btn');
+        // cartItems[i].deleteBtn.click();
+        // console.log(deleteButton);
+        deleteButton.click();
+       
+        
+    }
+})

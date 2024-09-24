@@ -33,6 +33,15 @@
 
 <body>
 
+  <div class="modal-backdrop"></div>
+
+  <div id="confirmed-modal" class="hidden">
+    <img src="assets\images\icon-order-confirmed.svg" alt="">
+    <h1>Order Confirmed</h1>
+    <p>We hope you enjoy your food!</p>
+    <button id="start-new-order" >Start New Order</button>
+  </div>
+
   <div class="container">
 
     <h1>Desserts</h1>
@@ -45,20 +54,11 @@
           <img src="assets\images\image-waffle-mobile.jpg" alt="waffle-img" class="product-img mobile">
           <img src="assets\images\image-waffle-tablet.jpg" alt="waffle-img" class="product-img tablet">
           <img src="assets\images\image-waffle-desktop.jpg" alt="waffle-img" class="product-img desktop">
+          <img src="assets\images\image-waffle-thumbnail.jpg" alt="waffle-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
           </button>
-          <button class="add-btn active">
-            <div>
-            <img src="assets\images\icon-decrement-quantity.svg" alt="decrement icon" class="decrement-btn">
-          </div>
-            <p>1</p>
-            <div>
-            <img src="assets\images\icon-increment-quantity.svg" alt="increment icon" class="increment-btn">
-            </div>
-          </button>
-
         <p class="product-name">Waffle</p>
         <p class="product-description">Waffle with Berries</p>
         <p class="product-price">$6.50</p>
@@ -74,6 +74,7 @@
           <img src="assets\images\image-creme-brulee-mobile.jpg" alt="waffle-img" class="product-img mobile">
           <img src="assets\images\image-creme-brulee-tablet.jpg" alt="waffle-img" class="product-img tablet">
           <img src="assets\images\image-creme-brulee-desktop.jpg" alt="waffle-img" class="product-img desktop">
+          <img src="assets\images\image-creme-brulee-thumbnail.jpg" alt="waffle-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -90,6 +91,7 @@
           <img src="assets\images\image-macaron-mobile.jpg" alt="waffle-img" class="product-img mobile">
           <img src="assets\images\image-macaron-tablet.jpg" alt="waffle-img" class="product-img tablet">
           <img src="assets\images\image-macaron-desktop.jpg" alt="waffle-img" class="product-img desktop">
+          <img src="assets\images\image-macaron-thumbnail.jpg" alt="waffle-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -106,6 +108,7 @@
           <img src="assets\images\image-tiramisu-mobile.jpg" alt="waffle-img" class="product-img mobile">
           <img src="assets\images\image-tiramisu-tablet.jpg" alt="waffle-img" class="product-img tablet">
           <img src="assets\images\image-tiramisu-desktop.jpg" alt="waffle-img" class="product-img desktop">
+          <img src="assets\images\image-tiramisu-thumbnail.jpg" alt="waffle-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -122,6 +125,7 @@
           <img src="assets\images\image-baklava-mobile.jpg" alt="baklava-img" class="product-img mobile">
           <img src="assets\images\image-baklava-tablet.jpg" alt="baklava-img" class="product-img tablet">
           <img src="assets\images\image-baklava-desktop.jpg" alt="baklava-img" class="product-img desktop">
+          <img src="assets\images\image-baklava-thumbnail.jpg" alt="baklava-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -138,6 +142,7 @@
           <img src="assets\images\image-meringue-mobile.jpg" alt="meringue-img" class="product-img mobile">
           <img src="assets\images\image-meringue-tablet.jpg" alt="meringue-img" class="product-img tablet">
           <img src="assets\images\image-meringue-desktop.jpg" alt="meringue-img" class="product-img desktop">
+          <img src="assets\images\image-meringue-thumbnail.jpg" alt="meringue-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -153,6 +158,7 @@
           <img src="assets\images\image-cake-mobile.jpg" alt="cake-img" class="product-img mobile">
           <img src="assets\images\image-cake-tablet.jpg" alt="cake-img" class="product-img tablet">
           <img src="assets\images\image-cake-desktop.jpg" alt="cake-img" class="product-img desktop">
+          <img src="assets\images\image-cake-thumbnail.jpg" alt="cake-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -171,6 +177,7 @@
           <img src="assets\images\image-brownie-mobile.jpg" alt="brownie-img" class="product-img mobile">
           <img src="assets\images\image-brownie-tablet.jpg" alt="brownie-img" class="product-img tablet">
           <img src="assets\images\image-brownie-desktop.jpg" alt="brownie-img" class="product-img desktop">
+          <img src="assets\images\image-brownie-thumbnail.jpg" alt="brownie-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -187,6 +194,7 @@
           <img src="assets\images\image-panna-cotta-mobile.jpg" alt="panna-cotta-img" class="product-img mobile">
           <img src="assets\images\image-panna-cotta-tablet.jpg" alt="panna-cotta-img" class="product-img tablet">
           <img src="assets\images\image-panna-cotta-desktop.jpg" alt="panna-cotta-img" class="product-img desktop">
+          <img src="assets\images\image-panna-cotta-thumbnail.jpg" alt="panna-cotta-img" class="product-img thumbnail hidden">
           <button class="add-btn" type="submit">
             <img src="assets\images\icon-add-to-cart.svg" alt="Add icon" class="add-icon">
             Add to Cart
@@ -219,7 +227,7 @@
       <img src="assets\images\icon-carbon-neutral.svg" alt="carbon neutral icon">
       <p>This is a <b>carbon-neutral</b> delivery</p>
     </div>
-    <button class="confirm-order-btn hidden">Confirm Order</button>
+    <button class="confirm-order-btn hidden" id="confirm-order">Confirm Order</button>
   </div>
 
 
